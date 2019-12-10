@@ -1,13 +1,16 @@
 const mongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId; 
 const express = require('express');
+var bodyParser = require('body-parser');
 const app = express();
 
 const port = 3000;
 const uri = 'mongodb+srv://admin:bnA48sjRo1nkH9B0@sandbox-joeds.mongodb.net/test?retryWrites=true&w=majority'
 
 function main() {
-    let api = app.listen(port, () => {
+    app.use(bodyParser.urlencoded({ extended: false }))
+
+    app.listen(port, () => {
         console.log("Server listening on port 3000");
     })
 
@@ -20,6 +23,17 @@ function main() {
         let post = await getPostByID(req.params.uid);
         res.send(post);
     })
+
+    app.post('/posts/', async (req, res) => {
+        const newPost = {
+            author: req.body.tauthor,
+            heading: req.body.theading,
+            content: req.body.tcontent,
+            timeStamp: req.body.ttimeStamp,
+        }
+        addPost(newPost);
+        res.send("created: " + newPost)
+    });
 }
 main();
 
