@@ -2,6 +2,7 @@ const mongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId; 
 const express = require('express');
 var bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
 
 const port = 3000;
@@ -9,6 +10,7 @@ const uri = 'mongodb+srv://admin:bnA48sjRo1nkH9B0@sandbox-joeds.mongodb.net/test
 
 function main() {
     app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(cors());
 
     app.listen(port, () => {
         console.log("Server listening on port 3000");
