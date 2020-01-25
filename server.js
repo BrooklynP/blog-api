@@ -9,7 +9,7 @@ const port = 3000;
 const uri = 'mongodb+srv://admin:bnA48sjRo1nkH9B0@sandbox-joeds.mongodb.net/test?retryWrites=true&w=majority'
 
 function main() {
-    app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(bodyParser.json())
     app.use(cors());
 
     app.listen(port, () => {
@@ -26,16 +26,22 @@ function main() {
         res.send(post);
     })
 
-    app.post('/posts/', async (req, res) => {
+    app.post('/posts', async (req, res) => {
+        console.log(req.body);
         const newPost = {
-            author: req.body.tauthor,
-            heading: req.body.theading,
-            content: req.body.tcontent,
-            timeStamp: req.body.ttimeStamp,
-        }
+            author: req.body.author,
+            heading: req.body.heading,
+            summary: req.body.summary,
+            content: req.body.content,
+        };
         addPost(newPost);
-        res.send("created: " + newPost)
+        // res.send("created: " + newPost)
     });
+
+    app.delete('/posts/:uid', async (req, res) => {
+        await deletePostByID(req.params.uid);
+        // res.send("Post deleted!")
+    })
 }
 main();
 
@@ -71,6 +77,20 @@ async function getPostByID(id) {
     console.log("Connected to database")
 
     const result = await db.collection('blogPosts').findOne({_id : new ObjectId(id)});
+    console.log("Result recieved");
+
+    return result; 
+}
+
+async function deletePostByID(id) {
+    console.log(id);
+    const cluster = await mongoClient.connect(uri, { useUnifiedTopology: true });
+    console.log("Connected to mongoDB cluster");
+
+    const db = cluster.db('devBlog');
+    console.log("Connected to database")
+
+    const result = await db.collection('blogPosts').deleteOne({_id: ObjectId(id)});
     console.log("Result recieved");
 
     return result; 
