@@ -5,6 +5,28 @@ var bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 
+// import Amplify, { Auth } from 'aws-amplify';
+const Amplify = require('aws-amplify');
+const Auth = require('aws-amplify').Auth;
+// const awsconfig = require('./aws-exports');
+// import awsconfig from './aws-exports';
+// Amplify.configure(awsconfig);
+// import Amplify, { Auth } from 'aws-amplify';
+
+Amplify.default.configure({
+    Auth: {
+        
+        // REQUIRED - Amazon Cognito Region
+        region: 'eu-west-1',
+
+        // OPTIONAL - Amazon Cognito User Pool ID
+        userPoolId: 'eu-central-1_RF9icWtBD',
+        userPoolWebClientId: '633u0hmdls7b6f1jd9c47ada37'
+    }
+});
+
+// You can get the current config object
+const currentConfig = Auth.configure();
 const port = 3000;
 const uri = 'mongodb+srv://admin:bnA48sjRo1nkH9B0@sandbox-joeds.mongodb.net/test?retryWrites=true&w=majority'
 
